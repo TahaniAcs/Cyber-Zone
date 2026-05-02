@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spot the Risk</title>
+
+  <!-- ملف الثيم العام إن وجد -->
+  <link rel="stylesheet" href="1.css">
+
+  <style>
+    :root{
+      --blue:  rgb(0,159,223);
+      --yellow:rgb(255,205,0);
+      --navy:  rgb(4,30,66);
+      --gray:  rgb(147,149,152);
+      --dgray: rgb(77,77,77);
+      --line:#E6E9EE;
+      --radius:16px;
+      --shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+
+    /* ===== Hero المختصر + الشريط الذهبي ===== */
+    .hero{background:#fff;border-bottom:1px solid var(--line)}
+    .hero .inner{padding:24px 0;text-align:center}
+    .hero h1{margin:0 0 6px;font-size:1.8rem;font-weight:800;color:var(--navy)}
+    .hero p{margin:0;color:var(--gray)}
+    .hero .gold-slab{height:10px;background:var(--yellow);border-top:1px solid rgba(0,0,0,.03)}
+
+    /* ===== الحاوية/الكارد ===== */
+    .spot-wrap{max-width:980px;margin:24px auto 40px;padding:0 20px}
+    .frame{
+      position:relative;background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .frame h2{margin:0 0 8px;font-size:1.2rem;color:var(--navy)}
+    .frame hr{border:none;border-top:1px solid var(--line);margin:10px 0}
+
+    /* الصورة وحاويتها (مرجع الإحداثيات) */
+    .img-wrap{position:relative;display:block;width:100%}
+    #mainImage{width:100%;height:auto;display:block;border-radius:12px}
+
+    /* مناطق النقر: مخفية تمامًا لكن قابلة للنقر */
+    .zone{
+      position:absolute;cursor:pointer;background:transparent;border:0;opacity:1;z-index:2;
+      border-radius:10px; /* لا يظهر لأن ما فيه حدود/خلفية */
+    }
+    
+.zone.found{ pointer-events:auto; }
+
+
+    /* (اختياري للمعاينة أثناء الضبط) فعّل بإضافة class="show-zones" على <body> */
+    body.show-zones .zone{
+      outline:2px dashed rgba(0,159,223,.45);
+      background:rgba(0,159,223,.08);
+    }
+
+    /* الفيدباك (صح/خطأ) */
+    .feedback{
+      position:absolute;font-weight:900;font-size:22px;pointer-events:none;
+      text-shadow:0 2px 10px rgba(0,0,0,.18);animation:pop .18s ease-out
+    }
+    @keyframes pop{from{transform:scale(.8);opacity:.4}to{transform:scale(1);opacity:1}}
+
+    /* سطر الحالة */
+    #status{margin:12px 4px 2px;font-weight:800;color:var(--dgray);text-align:center}
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+  <!-- يسار أعلى -->
+  <span class="ring lg" style="left:-120px; top:40px;"></span>
+  <!-- يمين وسط بلون أصفر -->
+  <span class="ring y md" style="right:-140px; top:180px;"></span>
+  <!-- دائرة رمادية صغيرة في الوسط السفلي -->
+  <span class="ring g sm" style="left:30%; top:420px;"></span>
+</div>
+  <!-- الهيدر الموحّد (من ثيمك) -->
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand brand-left">
+        <img src="LOG2.png" alt="Cyber Talk logo">
+           <img src="ll3.png" alt="Cyber Talk logo">
+      </div>
+      <nav class="links" aria-label="Primary">
+        <a href="index.html" class="cyber-link">Home</a>
+        <a href="2.html" class="cyber-link">Challenge 1</a>
+        <a href="3.html" class="cyber-link">Challenge 2</a>
+        <a href="4.html" class="cyber-link">Challenge 3</a>
+        <a href="5.html" class="cyber-link">Challenge 4</a>
+        <a href="6.html" class="cyber-link active">Challenge 5</a>
+      </nav>
+      <div class="brand brand-right">
+        <img src="YANPET Logo.jpg" alt="Yanpet logo">
+      </div>
+    </div>
+  </header>
+
+  <!-- الهيرو + الشريط الذهبي -->
+  <section class="hero">
+    <div class="wrap inner">
+      <h1>Spot the Risk</h1>
+      <p>Find the hidden cybersecurity threats in the scene.</p>
+    </div>
+    <div class="gold-slab"></div>
+  </section>
+
+  <!-- المحتوى -->
+  <main class="spot-wrap">
+    <div class="frame">
+      <h2>Cybersecurity Challenge: Identify 5 Threats</h2>
+      <hr>
+
+      <div class="img-wrap" id="imgWrap">
+        <img src="3.png" alt="Cyber scene" id="mainImage">
+
+        <!-- 1) الكاميرا أعلى الطابعة -->
+        <div class="zone correct" data-id="1"
+             style="left:7%; top:0.5%; width:25%; height:18%;"></div>
+
+        <!-- 2) ورقة CONFIDENTIAL المكشوفة فوق الطابعة -->
+        <div class="zone correct" data-id="2"
+             style="left:2.0%; top:27%; width:23%; height:20%;"></div>
+
+        <!-- 3) شاشة تسجيل الدخول (login-anhk.ru) -->
+        <div class="zone correct" data-id="3"
+             style="left:30%; top:30%; width:37%; height:30%;"></div>
+
+        <!-- 4) قائمة الموظفين على المكتب (EMPLOYEE LIST) -->
+        <div class="zone correct" data-id="4"
+             style="left:3%; top:68%; width:35%; height:20%;"></div>
+
+        <!-- 5) بطاقة الهوية عند السلك/الجوال -->
+        <div class="zone correct" data-id="5"
+             style="left:73%; top:77%; width:18%; height:12%;"></div>
+      </div>
+
+      <p id="status">🔍 Click on the image to find the 5 cybersecurity threats.</p>
+    </div>
+  </main>
+
+ <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+<script>
+  const wrap   = document.getElementById('imgWrap');
+  const zones  = wrap.querySelectorAll('.zone');
+  const status = document.getElementById('status');
+
+  let found = 0;
+  const maxCorrect = 5;
+  const countedOnce = new Set(); // لعدّ المنطقة مرة واحدة فقط
+
+  function showFeedback(x, y, symbol, color){
+    const w = wrap.getBoundingClientRect();
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+    fb.textContent = symbol;
+    fb.style.color = color;
+    fb.style.left = (x - w.left - 10) + 'px';
+    fb.style.top  = (y - w.top  - 20) + 'px';
+    wrap.appendChild(fb);
+    setTimeout(()=>fb.remove(), 1200);
+  }
+
+  // نقر خارج أي منطقة داخل الصورة => ✖ كل مرة
+  wrap.addEventListener('click', (e) => {
+    if (e.target.classList.contains('zone')) return; // المنطقة ستتعامل مع نفسها
+
+    // لو النقرة داخل أي منطقة، لا نظهر ✖
+    const insideZone = Array.from(zones).some(z => {
+      const r = z.getBoundingClientRect();
+      return e.clientX >= r.left && e.clientX <= r.right &&
+             e.clientY >= r.top  && e.clientY <= r.bottom;
+    });
+    if (insideZone) return;
+
+    showFeedback(e.clientX, e.clientY, '✖', '#ff4d4d');
+  });
+
+  // نقر داخل المنطقة => ✓ كل مرة (لكن نعدّها أول مرة فقط)
+  zones.forEach(zone => {
+    zone.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = zone.dataset.id;
+
+      // نعدّها أول مرة فقط
+      if (!countedOnce.has(id)) {
+        countedOnce.add(id);
+        found++;
+        status.textContent = `✅ ${found}/${maxCorrect} threats found`;
+        if (found === maxCorrect) status.innerHTML = '🎯 All 5/5 threats found!';
+      }
+
+      // أعطِ ✓ في مكان النقرة كل مرة
+      showFeedback(e.clientX, e.clientY, '✔', '#10b981');
+    });
+  });
+</script>
+
+</body>
+</html>
