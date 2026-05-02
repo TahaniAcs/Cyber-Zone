@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Cyber Escape — SABIC-like</title>
+  <style>
+    :root{
+      --blue:  rgb(0,159,223);
+      --yellow:rgb(255,205,0);
+      --navy:  rgb(4,30,66);
+      --orange:rgb(227,82,5);
+      --gray:  rgb(147,149,152);
+      --dgray: rgb(77,77,77);
+      --line:#E6E9EE; --surface:#fff; --bg:#f7f8fa;
+      --radius:14px; --shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:var(--bg);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--navy);line-height:1.7;overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+    }
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* ambient bg */
+    .ambient{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+    .bubble{position:absolute;border-radius:50%;border:3px solid rgba(0,159,223,.25);width:220px;height:220px;animation:float 14s ease-in-out infinite;filter:blur(.2px)}
+    .bubble.y{border-color:rgba(255,205,0,.25)}
+    .bubble.g{border-color:rgba(147,149,152,.25)}
+    .bubble.t{width:0;height:0;border:none;clip-path:polygon(50% 0,0 100%,100% 100%);background:rgba(0,159,223,.08);width:200px;height:180px;animation:float 18s ease-in-out infinite reverse;opacity:.8}
+    @keyframes float{0%{transform:translateY(10px)}50%{transform:translateY(-20px)}100%{transform:translateY(10px)}}
+.topbar {
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:saturate(115%) blur(6px);
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* شعار يسار | روابط وسط | شعار يمين */
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  height: 60px; /* أكبر من قبل */
+}
+
+.site-title {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-size: 1.3rem; /* أكبر شوي */
+  background: linear-gradient(
+    to right,
+    #004677 0%,
+    #004677 50%,
+    #ffcb1e 50%,
+    #ffcb1e 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cyber-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--blue);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+
+.cyber-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+.links .active {
+  color: #fff;
+  background: var(--blue);
+  border-color: transparent;
+}
+
+    /* hero */
+    .hero{position:relative;overflow:hidden;background:#fff;border-bottom:1px solid var(--line)}
+    .hero-img{position:relative;height:530px;display:grid;place-items:center;top:-150px}
+    .gold-slab{position:absolute;inset:auto 0 0 0;height:68%;background:var(--yellow);border-top-left-radius:60px;clip-path:ellipse(120% 100% at 80% 0%)}
+    .hero .content{position:relative;z-index:2;color:#fff;text-align:center;padding:40px 20px;max-width:900px;margin:0 auto}
+    .hero h1{margin:0 0 10px;font-size:2.2rem;font-weight:800}
+    .hero p{margin:0}
+
+    /* sections */
+    .section{padding:56px 0;background:#fff}
+    .section + .section{border-top:1px solid var(--line)}
+    .section-title{margin:0 0 18px;text-align:center;font-weight:800;letter-spacing:.3px;color:var(--dgray);font-size:1.6rem}
+    .lead{max-width:900px;margin:0 auto 26px;text-align:center;color:var(--gray)}
+
+    /* -------- Center wrapper for cards -------- */
+    .section-center{display:flex;justify-content:center;padding:0 16px}
+
+    /* -------- Cards Grid (responsive) -------- */
+    .cards-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap:28px;
+      max-width:1200px;
+      width:100%;
+    }
+
+    /* -------- Interactive Card -------- */
+    .card{
+      position:relative;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:26px 26px 22px;
+      display:flex;flex-direction:column;
+      min-height:280px;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      outline:0;
+    }
+    .card::after{
+      content:"";position:absolute;inset:-1px;border-radius:16px;pointer-events:none;
+      background:linear-gradient(120deg, rgba(0,159,223,.22), rgba(255,205,0,.22));
+      opacity:0;transition:opacity .18s ease;
+    }
+    .card:hover,.card:focus-within{
+      transform:translateY(-6px);
+      box-shadow:0 14px 30px rgba(0,0,0,.14);
+      border-color:rgba(0,159,223,.35);
+    }
+    .card:hover::after,.card:focus-within::after{opacity:1}
+
+    /* make whole card clickable */
+    .card-link{position:absolute;inset:0;border-radius:16px;z-index:1}
+    .card > *{position:relative;z-index:2}
+
+    .num-badge{font-weight:900;color:var(--blue);font-size:30px;line-height:1;margin-bottom:10px}
+    .card h3{margin:6px 0 10px;color:var(--navy);font-weight:800;font-size:20px}
+    .card ul{margin:0 0 16px;padding-left:18px}
+    .card li{margin:6px 0}
+
+    .go{
+      margin-top:auto;align-self:flex-start;
+      display:inline-block;font-weight:800;color:#fff;
+      background:var(--blue);padding:10px 18px;border-radius:999px;text-decoration:none;
+      box-shadow:0 10px 20px rgba(0,159,223,.25);
+      transform:translateY(0);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .go:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(0,159,223,.35)}
+    .go:active{transform:translateY(0);filter:saturate(1.05)}
+    .go[data-level="medium"]{background:var(--yellow);color:var(--navy);box-shadow:0 10px 20px rgba(255,205,0,.25)}
+    .go[data-level="hard"]{background:var(--dgray)}
+
+    /* donuts, tables, etc. (كما هي) */
+    .charts{max-width:1100px;margin:0 auto;display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:center}
+    .donut{position:relative}
+    .donut svg{display:block;max-width:420px;margin:0 auto}
+    .donut .center-title{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--dgray);font-weight:800}
+    .legend{max-width:420px;margin:10px auto 0;color:var(--dgray);font-size:.95rem}
+    .legend .row{display:flex;align-items:center;gap:10px;margin:6px 0}
+    .sw{width:14px;height:14px;border-radius:3px;background:var(--gray)}
+
+    .summary{max-width:900px;margin:4px auto 0;padding:0 20px}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}
+    th{background:#fafbfc;color:var(--dgray);font-weight:800}
+    tr:last-child td{border-bottom:none}
+
+    .shapes{max-width:1100px;margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+    .shape{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;display:grid;place-items:center}
+    .footer{background:#f0f2f5;border-top:1px solid var(--line);padding:28px 0;color:var(--dgray)}
+    .footer .cols{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+    .footer h4{margin:0 0 8px;color:#000;font-size:1rem}
+    .footer a{color:var(--blue);text-decoration:none}
+    .footer small{display:block;text-align:center;margin-top:18px;color:var(--gray)}
+
+    @media (prefers-reduced-motion: reduce){
+      .card,.card::after,.go{transition:none}
+    }
+    .nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* يخليهم على الأطراف */
+  padding: 14px 0;
+}
+
+.brand-second img {
+  height: 44px; /* نفس حجم الأولى */
+}
+
+  </style>
+
+  <script src="S1.js"></script>
+  <script src="S2.js" data-ch="challenge1" data-level="easy"></script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true">
+  <!-- يسار أعلى -->
+  <span class="ring lg" style="left:-120px; top:40px;"></span>
+  <!-- يمين وسط بلون أصفر -->
+  <span class="ring y md" style="right:-140px; top:180px;"></span>
+  <!-- دائرة رمادية صغيرة في الوسط السفلي -->
+  <span class="ring g sm" style="left:30%; top:420px;"></span>
+</div>
+  <!-- animated bg -->
+  <div class="ambient" aria-hidden="true">
+    <span class="bubble" style="left:-40px; top:60px;"></span>
+    <span class="bubble y" style="right:-30px; top:160px; width:180px; height:180px;"></span>
+    <span class="bubble g" style="left:30%; top:420px; width:160px; height:160px;"></span>
+    <span class="bubble t" style="right:12%; top:520px;"></span>
+  </div>
+
+<header class="topbar">
+  <div class="wrap nav">
+    <!-- شعار يسار -->
+    <div class="brand brand-left">
+      <img src="LOG2.png" alt="Cyber Talk logo">
+     <img src="ll3.png" alt="Cyber Talk logo">
+        
+    </div>
+
+    <!-- الروابط بالوسط -->
+    <nav class="links" aria-label="Primary">
+      <a href="index.html" class="cyber-link active">Home</a>
+      <a href="2.html" class="cyber-link">Challenge 1</a>
+      <a href="3.html" class="cyber-link">Challenge 2</a>
+      <a href="4.html" class="cyber-link">Challenge 3</a>
+      <a href="5.html" class="cyber-link">Challenge 4</a>
+      <a href="6.html" class="cyber-link">Challenge 5</a>
+    </nav>
+
+    <!-- شعار يمين -->
+    <div class="brand brand-right">
+      <img src="YANPET Logo.jpg" alt="Yanpet logo">
+    </div>
+  </div>
+</header>
+
+
+  <!-- hero -->
+  <section class="hero">
+    <div class="hero-img">
+      <div class="gold-slab"></div>
+      <div class="content">
+       <h1 style="font-size: 2.5rem;">Cyber Zone</h1>
+<p style="font-size: 1.3rem;">Your gateway to fun and safe cybersecurity learning.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- overview -->
+  <section class="section">
+    <h2 class="section-title">Challenges — Overview</h2>
+    <p class="lead">Click a card to open a challenge. Counters update automatically.</p>
+
+    <div class="section-center">
+      <div class="cards-grid">
+
+        <div class="card">
+          <a class="card-link" href="1.html" data-ch="challenge1" data-level="easy" aria-label="Open Challenge 1"></a>
+          <div class="num-badge">1</div>
+          <h3>Cyber Hygiene Challenge</h3>
+          <ul>
+            <li>Spot phishing links quickly.</li>
+            <li>Check password strength basics.</li>
+            <li>Make safe day-to-day choices.</li>
+          </ul>
+          <a class="go" href="2.html" data-ch="challenge1" data-level="easy">Open Challenge 1</a>
+        </div>
+
+        <div class="card">
+          <a class="card-link" href="5.html" data-ch="challenge2" data-level="easy" aria-label="Open Challenge 2"></a>
+          <div class="num-badge">2</div>
+          <h3> CyberWord Quest</h3>
+          <ul>
+            <li>Arrange the letters, </li>
+            <li>solve the cyber clues,</li>
+            <li>and earn your badges!</li>
+          </ul>
+          <a class="go" href="5.html" data-ch="challenge2" data-level="easy">Open Challenge 2</a>
+        </div>
+
+        <div class="card">
+          <a class="card-link" href="4.html" data-ch="challenge3" data-level="medium" aria-label="Open Challenge 3"></a>
+          <div class="num-badge">3</div>
+          <h3>Social Engineering Chat</h3>
+          <ul>
+            <li>Handle suspicious messages.</li>
+            <li>Decide what to reveal or block.</li>
+            <li>Practice safe responses.</li>
+          </ul>
+          <a class="go" href="4.html" data-ch="challenge3" data-level="medium">Open Challenge 3</a>
+        </div>
+
+        <div class="card">
+          <a class="card-link" href="3.html" data-ch="challenge4" data-level="medium" aria-label="Open Challenge 4"></a>
+          <div class="num-badge">4</div>
+          <h3>CyberCross</h3>
+          <ul>
+            <li>Connect concepts under time pressure.</li>
+            <li>Pick the safer path each turn.</li>
+            <li>Build quick judgement.</li>
+          </ul>
+          <a class="go" href="3.html" data-ch="challenge4" data-level="medium">Open Challenge 4</a>
+        </div>
+
+        <div class="card">
+          <a class="card-link" href="6.html" data-ch="challenge5" data-level="hard" aria-label="Open Challenge 5"></a>
+          <div class="num-badge">5</div>
+          <h3>Spot the Risk</h3>
+          <ul>
+            <li>Scan an office environment.</li>
+            <li>Highlight unsafe behaviors/settings.</li>
+            
+          </ul>
+          <a class="go" href="6.html" data-ch="challenge5" data-level="hard">Open Challenge 5</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- shapes -->
+  <section class="section">
+    <h2 class="section-title"></h2>
+    <p class="lead"></p>
+    <div class="shapes">
+      <div class="shape"><img src="C1.png" alt=""></div>
+      <div class="shape"><img src="Y1.png" alt=""></div>
+      <div class="shape"><img src="B1.png" alt=""></div>
+      <div class="shape"><img src="E1.png" alt=""></div>
+      <div class="shape"><img src="R1.png" alt=""></div>
+    
+    </div>
+  </section>
+
+  <!-- banner to bottom -->
+<section class="section" style="padding:0;border-top:none">
+  <section class="banner" style="background:var(--blue);color:#fff;padding:36px 0;margin:0">
+    <div class="wrap" style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center">
+      
+      <!-- الصورة يسار بحجم أصغر -->
+      <div class="shot" style="border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:150px">
+        
+      </div>
+
+      <!-- النص في النص -->
+      <div style="text-align:center">
+        <h2 style="margin:0 0 8px;font-size:1.8rem;font-weight:800">Our Modules</h2>
+        <p style="margin:0;opacity:.95;line-height:1.6">
+          Rana Almalki<br>
+          Tahani AlThubaiti<br>
+          Yara almutairi
+        </p>
+      </div>
+
+    </div>
+  </section>
+</section>
+
+</section>
+
+
+  <!-- footer -->
+ <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+
+  <!-- JS (نفس دوال الإحصائيات عندك) -->
+  <script>
+    const CH_KEYS = ['challenge1','challenge2','challenge3','challenge4','challenge5'];
+    const LV_KEYS = ['easy','medium','hard'];
+
+    function initCounters(){
+      CH_KEYS.forEach(k=>{
+        ['plays','completed','scoreSum','timeSumMs','scoreCount'].forEach(p=>{
+          const key=`${p}.${k}`; if(localStorage.getItem(key)===null) localStorage.setItem(key,'0');
+        });
+      });
+      LV_KEYS.forEach(k=>{ if(localStorage.getItem('level.'+k)===null) localStorage.setItem('level.'+k,'0'); });
+    }
+    function inc(key){ const v = parseInt(localStorage.getItem(key)||'0',10)+1; localStorage.setItem(key,String(v)); }
+    function add(key, val){ const v = parseFloat(localStorage.getItem(key)||'0')+Number(val||0); localStorage.setItem(key,String(v)); }
+
+    // bind tracking for any element with data attrs (buttons + whole card)
+    function bindTracking(){
+      document.querySelectorAll('[data-ch][data-level]').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          const ch = el.getAttribute('data-ch');
+          const lv = el.getAttribute('data-level');
+          inc('plays.'+ch);
+          if(lv) inc('level.'+lv);
+        }, {passive:true});
+      });
+    }
+
+    // donuts helpers (كما هي عندك)
+    function makeDonut(targetId, data, colors, totalLabelId){
+      const size=360, thick=48, r=size/2-4, ir=r-thick, cx=size/2, cy=size/2;
+      let svg=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img">`, angle=-Math.PI/2;
+      const sum=data.reduce((a,b)=>a+b.value,0)||1;
+      data.forEach((d,i)=>{
+        const slice=(d.value/sum)*Math.PI*2, a0=angle, a1=angle+slice; angle=a1;
+        const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0), x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+        const xi1=cx+ir*Math.cos(a1), yi1=cy+ir*Math.sin(a1), xi0=cx+ir*Math.cos(a0), yi0=cy+ir*Math.sin(a0);
+        const large=(a1-a0)>Math.PI?1:0;
+        const dpath=`M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${ir} ${ir} 0 ${large} 0 ${xi0} ${yi0} Z`;
+        svg+=`<path d="${dpath}" fill="${colors[i%colors.length]}" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>`;
+      });
+      svg+=`<circle cx="${cx}" cy="${cy}" r="${ir}" fill="#fff"/></svg>`;
+      document.getElementById(targetId).innerHTML=svg;
+      if(totalLabelId){ const total=data.reduce((a,b)=>a+b.value,0); document.getElementById(totalLabelId).textContent=String(total); }
+    }
+    function renderLegends(containerId, labels, colors, values){
+      const el=document.getElementById(containerId); el.innerHTML='';
+      labels.forEach((lbl,i)=>{
+        const row=document.createElement('div'); row.className='row';
+        row.innerHTML=`<span class="sw" style="background:${colors[i]}"></span><span>${lbl}: <strong>${values[i]}</strong></span>`;
+        el.appendChild(row);
+      });
+    }
+
+    // call what you need
+    initCounters();
+    bindTracking();
+  </script>
+</body>
+</html>
