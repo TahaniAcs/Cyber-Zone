@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mission Complete</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --navy:#041E42; --line:#E6E9EE; --blue:#009FDF; --blue2:#00B6FF;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      font-family:system-ui,Arial,sans-serif; background:#f7f8fa; color:var(--navy);
+    }
+    .card{
+      background:#fff; border:1px solid var(--line); border-radius:16px;
+      box-shadow:0 10px 24px rgba(0,0,0,.08); padding:36px 28px; max-width:680px; width:100%;
+    }
+    h1{margin:0 0 8px; font-size:2rem; font-weight:800}
+    h2{margin:0 0 18px; font-weight:700}
+    .metric{margin:8px 0 18px; font-weight:700}
+    .badge{display:flex; flex-direction:column; align-items:center; gap:8px; margin:20px 0}
+    .badge img{width:120px; height:120px;}
+    .role{font-weight:700}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin:18px 0 6px}
+    .btn{
+      border:0; cursor:pointer; padding:12px 20px; border-radius:999px; font-weight:800;
+      display:inline-flex; align-items:center; gap:8px; text-decoration:none; transition:.15s ease;
+    }
+    .btn:hover{opacity:.9}
+    .btn-primary{
+      color:#fff; background:linear-gradient(90deg,var(--blue),var(--blue2));
+      box-shadow:0 10px 26px rgba(0,159,223,.22);
+    }
+    .btn-dark{ color:#fff; background:#3a3a3a; }
+    .quote{margin-top:16px; color:#555}
+  </style>
+</head>
+<body>
+  <!-- Completion -->
+  <div class="container" id="completion-screen">
+    <div class="card">
+      <div class="completion-header">
+        <h1>🎉 Mission Complete!</h1>
+        <h2>🛡 I succeeded!</h2>
+      </div>
+
+      <div class="score-summary">
+        
+      </div>
+
+      <div class="badge">
+        <img src="https://cdn-icons-png.flaticon.com/512/2729/2729007.png" 
+             alt="Security badge" id="badgeImg">
+        <p>Cybersecurity Defender</p>
+      </div>
+
+      <!-- ✅ الأزرار بالألوان -->
+      <div class="actions">
+        <a id="downloadBtn" class="btn btn-primary" download>🎖 Download Badge</a>
+        <button class="btn btn-dark" id="share-result">📲 Share Result with Your Team</button>
+        <a href="index.html" class="btn btn-primary">🏠 Return to Homepage</a>
+      </div>
+
+      <div class="final-message">
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // تحديث زر التحميل عشان يحمل الصورة
+    (function(){
+      const img = document.getElementById('badgeImg');
+      const dl  = document.getElementById('downloadBtn');
+    
+// تنزيل الشارة / مشاركة (اختياري)
+    document.getElementById('download-badge').addEventListener('click', ()=>{
+      alert('Badge download coming soon.');
+    });
+    document.getElementById('share-result').addEventListener('click', ()=>{
+      alert('Share result feature coming soon.');
+    });
+
+
+
+    })();
+  </script>
+</body>
+</html>
