@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Engineering Chat</title>
+
+  <!-- CSS الأساسي الموحد -->
+  <link rel="stylesheet" href="1.css" />
+
+  <!-- تنسيقات إضافية خاصة بهذه الصفحة -->
+  <style>
+    :root{
+      --blue:  rgb(0,159,223);
+      --yellow:rgb(255,205,0);
+      --navy:  rgb(4,30,66);
+      --orange:rgb(227,82,5);
+      --gray:  rgb(147,149,152);
+      --dgray: rgb(77,77,77);
+      --line:#E6E9EE;
+    }
+
+    /* جسم الصفحة وخلفية الصورة */
+    body.page-chat{
+      margin:0;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--dgray);
+      min-height:100vh;
+      background: url("ranaalmalki.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* ===== هيرو موحد (عنوان + وصف + شريط ذهبي) ===== */
+    .hero{ background:#fff; border-bottom:1px solid var(--line) }
+    .hero .inner{ padding:24px 0; text-align:center }
+    .hero h1{ margin:0 0 6px; font-size:1.8rem; font-weight:800; color:var(--navy) }
+    .hero p{ margin:0; color:var(--gray) }
+    .hero .gold-slab{ height:10px; background:var(--yellow); border-top:1px solid rgba(0,0,0,.03) }
+
+    /* الحاوية والتموضع */
+    .container{ max-width:980px; margin:24px auto 40px; padding:0 20px }
+    .center-wrap{ display:grid; place-items:center }
+
+    /* صندوق الشات */
+    .chat-box{
+      width:360px; height:80vh;
+      background-color: rgba(4,30,66,0.90);
+      display:flex; flex-direction:column;
+      border-radius:20px; overflow:hidden;
+      box-shadow: 0 0 15px rgba(0,159,223,0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .chat-header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      padding:12px 14px;
+    }
+    .chat-id{ display:flex; align-items:center; gap:10px }
+    .chat-id img{
+      width:46px; height:46px; border-radius:50%;
+      background:#eef2f6; object-fit:cover;
+    }
+    .chat-id span{ font-size:16px; font-weight:800; color:var(--navy) }
+
+    .chat-header .btn{
+      background: var(--orange); color:#fff;
+      border:none; border-radius:999px;
+      padding:8px 14px; font-weight:800; cursor:pointer;
+      box-shadow:0 10px 20px rgba(227,82,5,.25);
+      transition: transform .15s, box-shadow .15s, filter .15s;
+    }
+    .chat-header .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 26px rgba(227,82,5,.35) }
+
+    .chat-body{
+      flex:1; overflow-y:auto; padding:14px;
+      background: rgba(4,30,66,.05);
+      display:flex; flex-direction:column;
+    }
+    .message{
+      max-width:80%; padding:10px 15px; margin:10px 0;
+      border-radius:20px; font-size:14px; line-height:1.5;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+    .incoming{
+      align-self:flex-start; background:#fff; color:#000;
+      border:1px solid var(--line); border-bottom-left-radius:4px;
+    }
+    .outgoing{
+      align-self:flex-end; background: rgba(255,205,0,0.88); color:#000;
+      border:1px solid rgba(0,0,0,.05); border-bottom-right-radius:4px; font-weight:600;
+    }
+
+    .chat-input{
+      display:flex; gap:10px; padding:10px;
+      background:#fff; border-top:1px solid var(--line);
+    }
+    .chat-input input[type="text"]{
+      flex:1; padding:10px 12px; border:1px solid var(--line);
+      border-radius:999px; outline:none; font-size:14px; background:#fff; color:#111;
+      transition: box-shadow .12s, border-color .12s;
+    }
+    .chat-input input[type="text"]:focus{
+      border-color: rgba(0,159,223,.45);
+      box-shadow: 0 0 0 4px rgba(0,159,223,.12);
+    }
+    .chat-input button{
+      padding:10px 16px; background:var(--blue);
+      border:none; border-radius:999px; cursor:pointer; font-weight:800; color:#fff;
+      box-shadow:0 10px 20px rgba(0,159,223,.25);
+      transition: transform .15s, box-shadow .15s, filter .15s;
+    }
+    .chat-input button:hover{ transform:translateY(-2px); box-shadow:0 14px 26px rgba(0,159,223,.35) }
+
+    .alert{
+      background: var(--orange); color:#fff;
+      padding:10px 12px; border-radius:12px; text-align:center;
+      margin:12px 0 2px; font-weight:800; animation:shake .4s;
+      border:1px solid rgba(0,0,0,.06);
+    }
+    @keyframes shake{
+      0%{transform:translateX(0)} 25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)} 75%{transform:translateX(-4px)}
+      100%{transform:translateX(0)}
+    }
+
+    /* استجابة */
+    @media (max-width:480px){
+      .chat-box{ width:92vw; height:78vh; }
+    }
+  </style>
+</head>
+
+<body class="page-chat">
+  <div class="ambient" aria-hidden="true">
+  <!-- يسار أعلى -->
+  <span class="ring lg" style="left:-120px; top:40px;"></span>
+  <!-- يمين وسط بلون أصفر -->
+  <span class="ring y md" style="right:-140px; top:180px;"></span>
+  <!-- دائرة رمادية صغيرة في الوسط السفلي -->
+  <span class="ring g sm" style="left:30%; top:420px;"></span>
+</div>
+  <!-- الهيدر الموحد -->
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand brand-left">
+        <img src="LOG2.png" alt="Cyber Talk logo">
+         <img src="ll3.png" alt="Cyber Talk ">
+        
+      </div>
+      <nav class="links" aria-label="Primary">
+      <a href="index.html" class="cyber-link ">Home</a>
+      <a href="2.html" class="cyber-link">Challenge 1</a>
+      <a href="3.html" class="cyber-link">Challenge 2</a>
+      <a href="4.html" class="cyber-link active">Challenge 3</a>
+      <a href="5.html" class="cyber-link">Challenge 4</a>
+      <a href="6.html" class="cyber-link">Challenge 5</a>
+    </nav>
+      <div class="brand brand-right">
+        <img src="YANPET Logo.jpg" alt="Yanpet logo">
+      </div>
+    </div>
+  </header>
+
+  <!-- هيرو واحد فقط -->
+  <section class="hero">
+    <div class="wrap inner">
+      <h1>Social Engineering Chat</h1>
+      <p>Practice spotting manipulative prompts before sharing sensitive info.</p>
+    </div>
+    <div class="gold-slab"></div>
+  </section>
+
+  <!-- المحتوى -->
+  <main class="container center-wrap">
+    <section class="chat-box" aria-live="polite">
+      <header class="chat-header">
+        <div class="chat-id">
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Agent avatar">
+          <span>IT Support</span>
+        </div>
+        <button type="button" class="btn" id="blockBtn">Block</button>
+      </header>
+
+      <div class="chat-body" id="chat">
+        <div class="message incoming">We detected suspicious activity on your account.</div>
+        <div class="message incoming">Did you recently log in from a new device? (yes/no)</div>
+      </div>
+
+      <form class="chat-input" id="chatForm" autocomplete="off">
+        <input type="text" id="userInput" placeholder="Type your answer..." />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+  <!-- footer -->
+  <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+
+      
+
+  <script>
+    // منطق الدردشة
+    let stage = 1, stopped = false;
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("userInput");
+    const blockBtn = document.getElementById("blockBtn");
+
+    function append(type, text){
+      chat.insertAdjacentHTML('beforeend', `<div class="message ${type}">${text}</div>`);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      if (stopped) return;
+      const message = (input.value||'').trim();
+      if (!message) return;
+
+      append('outgoing', message);
+      input.value = '';
+      const msg = message.toLowerCase();
+
+      setTimeout(()=>{
+  if (stage === 1) {
+    if (msg.includes("no")) {
+      append('incoming', "Okay. Please stay alert and contact us if anything happens.");
+      stopped = true;
+    } else if (msg.includes("yes")) {
+      append('incoming', "To verify your identity, please enter your company email.");
+      stage++;
+    } else {
+      append('incoming', 'Please answer with "yes" or "no".');
+    }
+  } else if (stage === 2) {
+    if (msg === "no") {
+      append('incoming', "Operation cancelled. Thank you.");
+      stopped = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(message)) {
+      append('incoming', "❌ Invalid email format. Try again.");
+    } else {
+      append('incoming', "Enter your employee ID number.");
+      stage++;
+    }
+  } else if (stage === 3) {
+    if (msg === "no") {
+      append('incoming', "Operation cancelled. Thank you.");
+      stopped = true;
+    } else if (!/^\d+$/.test(message)) {   // ✅ أي عدد من الأرقام (مفتوح الطول)
+      append('incoming', "❌ Invalid ID. It must contain only digits.");
+    } else {
+      append('incoming', "Please enter the 4-digit verification code sent to your device.");
+      stage++;
+    }
+  } else if (stage === 4) {
+    if (msg === "no") {
+      append('incoming', "Operation cancelled. Thank you.");
+      stopped = true;
+    } else if (!/^\d{4}$/.test(message)) {
+      append('incoming', "❌ Invalid code. It must be exactly 4 digits.");
+    } else {
+      chat.insertAdjacentHTML('beforeend',
+        `<div class="alert">⚠️ You've been tricked! Your data has been stolen.</div>`);
+      stopped = true;
+    }
+  }
+}, 600);
+
+    });
+
+    blockBtn.addEventListener('click', ()=>{
+      if (stopped) return;
+      chat.insertAdjacentHTML('beforeend', `<div class="alert">🚫 User has been blocked.</div>`);
+      stopped = true;
+    });
+
+    // تكامل العداد (اختياري)
+    const CH_KEY = (()=> {
+      const file = location.pathname.split('/').pop() || '';
+      const m = file.match(/game([1-5])\.html/i);
+      return m ? `challenge${m[1]}` : 'challenge3';
+    })();
+    const LEVEL = (CH_KEY==='challenge1' || CH_KEY==='challenge2') ? 'easy'
+                 : (CH_KEY==='challenge3' || CH_KEY==='challenge4') ? 'medium'
+                 : 'hard';
+    const __t0 = performance.now();
+    if (typeof reportPlay === 'function') reportPlay(CH_KEY, LEVEL);
+    window.finishChallenge = function(success, score){
+      try{
+        const durationMs = Math.round(performance.now() - __t0);
+        if (typeof reportCompletion === 'function') {
+          reportCompletion(CH_KEY, { success: !!success, score: (score ?? null), durationMs });
+        }
+      }catch(e){ console.error(e); }
+    };
+  </script>
+</body>
+</html>
