@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cyber Cross — Challenge 5</title>
+
+  <!-- الثيم العام المشترك -->
+  <link rel="stylesheet" href="1.css" />
+
+  <!-- تنسيقات هذه الصفحة فقط -->
+  <style>
+  
+ :root{
+      --blue:  rgb(0,159,223);
+      --yellow:rgb(255,205,0);
+      --navy:  rgb(4,30,66);
+      --gray:  rgb(147,149,152);
+      --dgray: rgb(77,77,77);
+      --line:#E6E9EE; --bg:#f7f8fa;
+      --radius:16px; --shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+    body{margin:0;background:var(--bg);color:var(--navy);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+    /* Header (يعتمد على 1.css) */
+    .topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;backdrop-filter:saturate(115%) blur(6px)}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+    .nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand img{height:60px}
+    .site-title{margin:0;font-weight:800;letter-spacing:.2px;font-size:1.3rem;background:linear-gradient(to right,#004677 0%,#004677 50%,#ffcb1e 50%,#ffcb1e 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+    .cyber-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--blue);font-weight:700;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);transition:transform .15s, box-shadow .15s, background .15s}
+    .cyber-link:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .links .active{color:#fff;background:var(--blue);border-color:transparent}
+
+    /* Hero */
+    .hero{background:#fff;border-bottom:1px solid var(--line)}
+    .hero .inner{padding:26px 0;text-align:center}
+    .hero h1{margin:0 0 8px;font-size:2rem;font-weight:800;color:var(--navy)}
+    .hero p{margin:0;color:var(--gray)}
+    .hero .gold-slab{height:10px;background:var(--yellow);border-top:1px solid rgba(0,0,0,.03)}
+
+    /* Content card */
+    .container{max-width:1100px;margin:20px auto 40px;padding:0 20px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px}
+
+    /* Cross styles */
+    .title{margin:0 0 6px;font-size:1.6rem;font-weight:800;color:var(--navy);text-align:center}
+    .lead{margin:0 auto 12px;text-align:center;color:var(--dgray)}
+    table{margin:16px auto;border-collapse:collapse}
+    td{
+      width:42px;height:42px;text-align:center;vertical-align:middle;
+      border:1px solid var(--line);font-weight:800;font-size:18px;color:var(--navy);
+      cursor:pointer;user-select:none;background:#fff;
+      transition:transform .12s, box-shadow .12s, background .12s, color .12s, border-color .12s;
+    }
+    td:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.06);border-color:rgba(0,159,223,.35);background:#f8fbff}
+    td.selected{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 10px 20px rgba(0,159,223,.25)}
+    td.found{background:var(--yellow);color:var(--navy);border-color:rgba(255,205,0,.55);box-shadow:0 10px 20px rgba(255,205,0,.25) inset}
+
+    #question-list{margin-top:18px}
+    #question-list h3{margin:0 0 8px;color:var(--navy)}
+    #questions{padding-left:18px;margin:0}
+    #questions li{margin:8px 0;color:var(--dgray)}
+    #questions li.found{text-decoration:line-through;color:var(--gray)}
+
+    .actions{display:flex;justify-content:center;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:800;cursor:pointer;box-shadow:0 10px 20px rgba(0,159,223,.25);transition:transform .15s,box-shadow .15s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(0,159,223,.35)}
+    #message{margin-top:12px;font-weight:800;text-align:center}
+
+  </style>
+</head>
+<body>
+<!-- Ambient rings (خلفية الدوائر) -->
+<div class="ambient" aria-hidden="true">
+  <!-- يسار أعلى -->
+  <span class="ring lg" style="left:-120px; top:40px;"></span>
+  <!-- يمين وسط بلون أصفر -->
+  <span class="ring y md" style="right:-140px; top:180px;"></span>
+  <!-- دائرة رمادية صغيرة في الوسط السفلي -->
+  <span class="ring g sm" style="left:30%; top:420px;"></span>
+</div>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand">
+        <img src="LOG2.png" alt="Cyber logo">
+        <img src="ll3.png" alt="Cyber Talk logo">
+        
+      </div>
+      <nav class="links" aria-label="Primary">
+        <a href="index.html" class="cyber-link">Home</a>
+        <a href="2.html" class="cyber-link">Challenge 1</a>
+        <a href="3.html" class="cyber-link active">Challenge 2</a>
+        <a href="4.html" class="cyber-link">Challenge 3</a>
+        <a href="5.html" class="cyber-link">Challenge 4</a>
+        <a href="6.html" class="cyber-link ">Challenge 5</a>
+      </nav>
+      <div class="brand">
+        <img src="YANPET Logo.jpg" alt="Yanpet logo">
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap inner">
+      <h1>Cyber Cross</h1>
+      <p>Guess the cybersecurity word from the clues, find it in the grid, then click “Check Word”.</p>
+    </div>
+    <div class="gold-slab"></div>
+  </section>
+
+  <!-- Content -->
+  <main class="container">
+    <div class="card">
+      <h2 class="title">🧩 Cyber Cross</h2>
+      <p class="lead">Select the letters in order, then press the button to check.</p>
+
+      <table id="grid" aria-label="Letter grid"></table>
+
+      <div class="actions">
+        <button class="btn" id="btn-check-cross">Check Word ✅</button>
+      </div>
+      <div id="message" aria-live="polite"></div>
+
+      <div id="question-list">
+        <h3>❓ Clues:</h3>
+        <ul id="questions">
+          <li data-answer="BACKUP">💾 A saved copy of data used when the original is lost.</li>
+          <li data-answer="MALWARE">👾 Malicious software used to damage or steal data.</li>
+          <li data-answer="FIREWALL">🔥 A system that controls network traffic and blocks unauthorized access.</li>
+          <li data-answer="ANTIVIRUS">🛡️ A program that protects a computer from viruses and threats.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+<!-- footer -->
+  <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+  
+  <script>
+    // ===== Cyber Cross (Standalone) =====
+    (function(){
+      const answers = ["BACKUP", "MALWARE", "FIREWALL", "ANTIVIRUS"];
+      const gridRows = 4, gridCols = 12;
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      // Build grid matrix
+      const grid = Array.from({ length: gridRows }, () => Array(gridCols).fill(''));
+      // place words, one per row
+      answers.forEach((word, index) => {
+        const row = index;
+        const startCol = Math.floor(Math.random() * (gridCols - word.length));
+        for (let i = 0; i < word.length; i++) grid[row][startCol + i] = word[i];
+      });
+      // fill remaining
+      for (let r = 0; r < gridRows; r++)
+        for (let c = 0; c < gridCols; c++)
+          if (grid[r][c] === '') grid[r][c] = letters[Math.floor(Math.random() * letters.length)];
+
+      // render
+      const gridElement = document.getElementById('grid');
+      for (let r = 0; r < gridRows; r++) {
+        const row = gridElement.insertRow();
+        for (let c = 0; c < gridCols; c++) {
+          const cell = row.insertCell();
+          cell.textContent = grid[r][c];
+          cell.addEventListener('click', ()=> cell.classList.toggle('selected'));
+        }
+      }
+
+      const message = document.getElementById('message');
+      const qList = document.getElementById('questions');
+      const btnCheck = document.getElementById('btn-check-cross');
+
+      function showMsg(text, ok, keep){
+        message.textContent = text;
+        message.style.color = ok ? 'limegreen' : 'crimson';
+        if(!keep) setTimeout(()=> message.textContent='', 2500);
+      }
+
+      btnCheck.addEventListener('click', ()=>{
+        const selectedCells = document.querySelectorAll('#grid td.selected');
+        let selectedWord = '';
+        selectedCells.forEach(cell => { selectedWord += cell.textContent; });
+
+        if (answers.includes(selectedWord)) {
+          selectedCells.forEach(cell => { cell.classList.remove('selected'); cell.classList.add('found'); });
+          qList.querySelectorAll('li').forEach(li => { if (li.dataset.answer === selectedWord) li.classList.add('found'); });
+          const remaining = qList.querySelectorAll('li:not(.found)');
+          if (remaining.length === 0) showMsg('🎉 Congratulations! You found all the words!', true, true);
+          else showMsg('✅ Correct: ' + selectedWord, true, false);
+        } else {
+          selectedCells.forEach(cell => cell.classList.remove('selected'));
+          showMsg('❌ Incorrect. Try again.', false, false);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
