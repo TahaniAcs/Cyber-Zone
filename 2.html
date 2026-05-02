@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cyber Escape — Challenge Pack</title>
+<link rel="stylesheet" href="1.css">
+  <style>
+
+    :root{
+      --blue:  rgb(0,159,223);
+      --yellow:rgb(255,205,0);
+      --navy:  rgb(4,30,66);
+      --orange:rgb(227,82,5);
+      --gray:  rgb(147,149,152);
+      --dgray: rgb(77,77,77);
+      --line:#E6E9EE; --surface:#fff; --bg:#f7f8fa;
+      --radius:16px; --shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:var(--bg);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--navy);line-height:1.7;overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+    }
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* ambient bg (خفيف اختيارية) */
+    .ambient{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+    .bubble{position:absolute;border-radius:50%;border:3px solid rgba(0,159,223,.25);width:200px;height:200px;animation:float 14s ease-in-out infinite;filter:blur(.2px)}
+    .bubble.y{border-color:rgba(255,205,0,.25)}
+    .bubble.g{border-color:rgba(147,149,152,.25)}
+    @keyframes float{0%{transform:translateY(10px)}50%{transform:translateY(-20px)}100%{transform:translateY(10px)}}
+
+    
+    /* hero */
+
+
+/* شريط أصفر تلقائي تحت الهيرو لكل الصفحات */
+.hero::after{
+  content:"";
+  display:block;
+  height:10px;
+  background:var(--yellow);
+  border-top:1px solid rgba(0,0,0,.03);
+  width:100%;
+}
+
+/* هيرو مختصر ومرتب */
+.hero-img{
+  position:relative;
+  height:260px;          /* بدل 530px */
+  display:grid;
+  place-items:center;
+  top:0;                 /* ألغينا الرفع السالب */
+}
+
+/* ما نحتاج العنصر هذا خلاص */
+.gold-slab{ display:none; }
+
+/* محتوى الهيرو */
+.hero .content{
+  position:relative;
+  z-index:2;
+  color:var(--navy);      /* بدل الأبيض */
+  text-align:center;
+  padding:24px 20px;      /* أخف */
+  max-width:900px;
+  margin:0 auto;
+}
+.hero h1{ margin:0 0 10px; font-size:2rem; font-weight:800 }
+.hero p{ margin:0; color:var(--gray) }
+
+
+    /* layout للكروت والمحتوى */
+    .section{padding:28px 0;background:#fff}
+    .section + .section{border-top:1px solid var(--line)}
+    .section-title{margin:0 0 12px;text-align:center;font-weight:800;letter-spacing:.3px;color:var(--dgray);font-size:1.4rem}
+
+    /* كارت عام */
+    .container{max-width:1100px;margin:20px auto;padding:0 20px}
+    .card{
+      position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:26px
+    }
+    .card h1{margin:0 0 10px;font-size:1.6rem}
+    .card h2{margin:0 0 8px;font-size:1.2rem}
+    .card h3{margin:18px 0 8px;font-size:1rem;color:var(--dgray)}
+
+    /* أزرار */
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--blue);color:#fff;border:none;border-radius:999px;
+      padding:10px 16px;font-weight:800;cursor:pointer;box-shadow:0 10px 20px rgba(0,159,223,.25);
+      transition:transform .15s,box-shadow .15s,filter .15s
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(0,159,223,.35)}
+    .btn:active{transform:translateY(0);filter:saturate(1.05)}
+    .btn.secondary{background:var(--yellow);color:var(--navy);box-shadow:0 10px 20px rgba(255,205,0,.25)}
+
+    /* عناصر اللعبة */
+    .hidden{display:none}
+    .mission-checklist{list-style:none;padding:0;margin:10px 0 0}
+    .mission-checklist li{display:flex;align-items:center;gap:8px;margin:6px 0}
+    .checkbox{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);display:inline-block}
+    .checked{background:var(--blue)}
+    .email{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+    .link-options{display:grid;gap:10px;margin-top:10px}
+    .link-btn{
+      border:1px solid var(--line);border-radius:999px;padding:10px 12px;background:#fff;cursor:pointer;
+      transition:transform .15s,box-shadow .15s
+    }
+    .link-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+    .password-options{display:grid;gap:12px;margin:12px 0}
+    .password-item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+    .password-actions button{margin-inline-start:6px}
+
+    .office-scene{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:10px 0}
+    .scene-item{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;text-align:center}
+    .risk-actions button{margin-inline:4px}
+
+    .behavior-assessment{display:grid;gap:14px}
+    .drop-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .drop-zone{min-height:120px;border:2px dashed var(--line);border-radius:12px;padding:10px;background:#fff}
+    .safe-zone{border-color:rgba(0,159,223,.35)}
+    .unsafe-zone{border-color:rgba(227,82,5,.35)}
+    .behavior-cards{display:flex;flex-wrap:wrap;gap:10px}
+    .behavior-card{user-select:none;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;cursor:grab}
+
+    .completion-header h1{margin:0 0 8px}
+    .badge{display:grid;place-items:center;margin:14px 0}
+    .share-btn{background:var(--dgray)}
+
+    @media (prefers-reduced-motion: reduce){
+      .btn{transition:none}
+    }
+    .clicked {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+/* نفس ستايل التحدي الثاني */
+.clicked {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.topbar {
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:saturate(115%) blur(6px);
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* شعار يسار | روابط وسط | شعار يمين */
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  height: 60px; /* أكبر من قبل */
+}
+
+.site-title {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-size: 1.3rem; /* أكبر شوي */
+  background: linear-gradient(
+    to right,
+    #004677 0%,
+    #004677 50%,
+    #ffcb1e 50%,
+    #ffcb1e 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cyber-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--blue);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+
+.cyber-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+.links .active {
+  color: #fff;
+  background: var(--blue);
+  border-color: transparent;
+}
+
+
+.container {
+  margin-bottom: 60px; /* مسافة أسفل الصفحة */
+}
+/* توضيح اختيار الأزرار */
+.clicked{ outline:2px solid var(--blue); outline-offset:2px; }
+
+/* اختيار عناصر المخاطر في التحدي 3 */
+.scene-item.is-risk    { border-color: rgba(227,82,5,.55); }
+.scene-item.is-safe    { border-color: rgba(0,159,223,.45); }
+
+/* مسافة أسفل الصفحة */
+body{ padding-bottom:60px; }       /* يضيف فراغ مثل الصفحة الأولى */
+.container{ margin-bottom:40px; }  /* يزيد التهوية بين الأقسام */
+
+/* ===== Footer (base design) ===== */
+.footer{
+  background:#f0f2f5;
+  border-top:1px solid var(--line);
+  padding:32px 0;
+  color:var(--dgray);
+}
+.footer .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.footer .cols{
+  display:grid;
+  gap:18px;
+  grid-template-columns: repeat(4, 1fr);
+}
+.footer h4{
+  margin:0 0 10px;
+  color:#000;
+  font-size:1rem;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.footer a{
+  display:inline-block;
+  text-decoration:none;
+  color:var(--blue);
+  padding:2px 0;
+  border-radius:6px;
+  transition:transform .15s, box-shadow .15s, color .15s;
+}
+.footer a:hover{
+  transform:translateY(-1px);
+  color:#004677; /* أزرق غامق قريب من الثيم */
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.footer small{
+  display:block;
+  text-align:center;
+  margin-top:22px;
+  color:var(--gray);
+  font-weight:600;
+}
+
+/* شريط فاصل لطيف بنفس الثيم (اختياري) */
+.footer::before{
+  content:"";
+  display:block;
+  height:3px;
+  background:linear-gradient(90deg, rgba(0,159,223,.35), rgba(255,205,0,.35));
+  margin:-32px 0 28px;
+}
+
+/* استجابة الشاشات الصغيرة */
+@media (max-width: 900px){
+  .footer .cols{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px){
+  .footer .cols{ grid-template-columns: 1fr; }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- ambient -->
+  <div class="ambient" aria-hidden="true">
+    <span class="bubble" style="left:-40px; top:60px;"></span>
+    <span class="bubble y" style="right:-30px; top:160px; width:180px; height:180px;"></span>
+    <span class="bubble g" style="left:30%; top:420px; width:160px; height:160px;"></span>
+  </div>
+
+  <!-- header -->
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand">
+        <img src="LOG2.png" alt="YANPET logo">
+       <img src="ll3.png" alt="Cyber Talk logo">
+        
+      </div>
+       <nav class="links" aria-label="Primary">
+      <a href="index.html" class="cyber-link ">Home</a>
+      <a href="2.html" class="cyber-link active">Challenge 1</a>
+      <a href="3.html" class="cyber-link">Challenge 2</a>
+      <a href="4.html" class="cyber-link">Challenge 3</a>
+      <a href="5.html" class="cyber-link">Challenge 4</a>
+      <a href="6.html" class="cyber-link">Challenge 5</a>
+    </nav>
+    </div>
+  </header>
+
+  <!-- hero -->
+  <section class="hero">
+    <div class="hero-img">
+      <div class="gold-slab"></div>
+      <div class="content">
+        <h1>Cyber Escape — Challenge Pack</h1>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Welcome / Challenge 0 -->
+  <div class="container" id="welcome-screen">
+    <div class="card">
+      <h1>CYBER ESCAPE</h1>
+      <div class="alert-section">
+        <h3>1. ALERT</h3>
+      </div>
+
+      <div class="mission-section">
+        <h3>YOUR MISSION:</h3>
+        <p>Detect the threats, stop the attackers, and protect your company before it's too late.</p>
+        <ul class="mission-checklist">
+          <li><span class="checkbox unchecked"></span> 4 Challenges</li>
+          <li><span class="checkbox checked"></span> Limited Time</li>
+          <li><span class="checkbox unchecked"></span> Save Company</li>
+        </ul>
+      </div>
+
+      <div class="begin-section">
+        <h3>2. Begin the Mission</h3>
+        <p>You must complete 4 short cyber challenges to secure your company.</p>
+        <button id="begin-btn" class="btn">▶ Begin the Mission</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenge 1 -->
+  <div class="container hidden" id="challenge1-screen">
+    <div class="card">
+      <div class="challenge-header">
+        <h1>Challenge 1/4</h1>
+        <h2>Phishing Attack Detected</h2>
+      </div>
+
+      <div class="email-simulation">
+        <p>You receive a strange email asking you to update your account. Can you tell which link is safe?</p>
+        <div class="email">
+          <p><strong>From:</strong> security@bank-alerts.com</p>
+          <p><strong>Subject:</strong> Urgent: Account Security Update Required</p>
+
+          <div class="email-body">
+            <p>Dear Customer,</p>
+            <p>We have detected unusual activity on your account. Please verify your credentials immediately by clicking one of the links below:</p>
+
+            <p><strong>Tap the link you think is safe:</strong></p>
+            <div class="link-options">
+              <button class="link-btn" data-correct="false">login-update.bank-verify.net</button>
+              <button class="link-btn" data-correct="true">https://strong.com</button>
+              <button class="link-btn" data-correct="false">bank.com.sa/update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback hidden" id="challenge1-feedback">
+        <p id="feedback-text"></p>
+        <button class="btn hidden" id="next-challenge1">➡ Next Challenge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenge 2 -->
+  <div class="container hidden" id="challenge2-screen">
+    <div class="card">
+      <div class="challenge-header">
+        <h1>Challenge 2/4</h1>
+        <h2>Weak Password Detection</h2>
+      </div>
+
+      <p>Identify which of these passwords are weak and need to be changed immediately:</p>
+
+      <div class="password-options">
+        <div class="password-item" data-weak="true">
+          <span>password123</span>
+          <div class="password-actions">
+            <button class="btn secondary weak-btn">Weak</button>
+            <button class="btn strong-btn">Strong</button>
+          </div>
+        </div>
+        <div class="password-item" data-weak="false">
+          <span>J4n3!D0e#2023</span>
+          <div class="password-actions">
+            <button class="btn secondary weak-btn">Weak</button>
+            <button class="btn strong-btn">Strong</button>
+          </div>
+        </div>
+        <div class="password-item" data-weak="true">
+          <span>123456</span>
+          <div class="password-actions">
+            <button class="btn secondary weak-btn">Weak</button>
+            <button class="btn strong-btn">Strong</button>
+          </div>
+        </div>
+        <div class="password-item" data-weak="true">
+          <span>qwerty</span>
+          <div class="password-actions">
+            <button class="btn secondary weak-btn">Weak</button>
+            <button class="btn strong-btn">Strong</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback hidden" id="challenge2-feedback">
+        <p id="feedback-text2"></p>
+        <button class="btn hidden" id="next-challenge2">➡ Next Challenge</button>
+      </div>
+
+      <button class="btn" id="check-passwords">Check Answers</button>
+    </div>
+  </div>
+
+  <!-- Challenge 3 -->
+  <div class="container hidden" id="challenge3-screen">
+    <div class="card">
+      <div class="challenge-header">
+        <h1>Challenge 3/4</h1>
+        <h2>Physical Security Check</h2>
+      </div>
+
+      <p>Spot the security risks in this office scenario:</p>
+
+      <div class="office-scene">
+        <div class="scene-item" data-risk="true">
+          <img src="https://cdn-icons-png.flaticon.com/512/1570/1570887.png" alt="Unlocked computer">
+          <p>Unlocked workstation</p>
+          <div class="risk-actions">
+            <button class="btn secondary risk-btn">Risk</button>
+            <button class="btn safe-btn">Safe</button>
+          </div>
+        </div>
+        <div class="scene-item" data-risk="false">
+          <img src="https://cdn-icons-png.flaticon.com/512/1570/1570906.png" alt="Locked cabinet">
+          <p>Locked filing cabinet</p>
+          <div class="risk-actions">
+            <button class="btn secondary risk-btn">Risk</button>
+            <button class="btn safe-btn">Safe</button>
+          </div>
+        </div>
+        <div class="scene-item" data-risk="true">
+          <img src="https://cdn-icons-png.flaticon.com/512/2889/2889676.png" alt="Password on sticky note">
+          <p>Password on sticky note</p>
+          <div class="risk-actions">
+            <button class="btn secondary risk-btn">Risk</button>
+            <button class="btn safe-btn">Safe</button>
+          </div>
+        </div>
+        <div class="scene-item" data-risk="true">
+          <img src="https://cdn-icons-png.flaticon.com/512/2889/2889678.png" alt="Visitor without badge">
+          <p>Visitor without badge</p>
+          <div class="risk-actions">
+            <button class="btn secondary risk-btn">Risk</button>
+            <button class="btn safe-btn">Safe</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback hidden" id="challenge3-feedback">
+        <p id="feedback-text3"></p>
+        <button class="btn hidden" id="next-challenge3">➡ Next Challenge</button>
+      </div>
+
+      <button class="btn" id="check-risks">Check Answers</button>
+    </div>
+  </div>
+
+  <!-- Challenge 4 -->
+  <div class="container hidden" id="challenge4-screen">
+    <div class="card">
+      <div class="challenge-header">
+        <h1>Challenge 4/4</h1>
+        <h2>Security Behavior Assessment</h2>
+      </div>
+
+      <p>Read each action and decide: Is it safe or unsafe cybersecurity behavior?</p>
+
+      <div class="behavior-assessment">
+        <div class="drop-zones">
+          <div class="drop-zone safe-zone" id="safe-zone">
+            <h3>✅ SAFE</h3>
+          </div>
+          <div class="drop-zone unsafe-zone" id="unsafe-zone">
+            <h3>❌ UNSAFE</h3>
+          </div>
+        </div>
+
+        <div class="behavior-cards">
+          <div class="behavior-card" draggable="true" data-safe="false">
+            <p>Used public WiFi without VPN</p>
+          </div>
+          <div class="behavior-card" draggable="true" data-safe="false">
+            <p>Shared MFA code with a coworker</p>
+          </div>
+          <div class="behavior-card" draggable="true" data-safe="true">
+            <p>Enabled two-factor authentication</p>
+          </div>
+          <div class="behavior-card" draggable="true" data-safe="false">
+            <p>Stored passwords in a text file</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback hidden" id="challenge4-feedback">
+        <p id="feedback-text4"></p>
+        <button class="btn" id="next-challenge4">Complete Mission</button>
+      </div>
+
+      <button class="btn" id="check-behaviors">Check Answers</button>
+    </div>
+  </div>
+
+  <!-- Completion -->
+  <div class="container hidden" id="completion-screen">
+    <div class="card">
+      <div class="completion-header">
+        <h1>🎉 Mission Complete!</h1>
+        <h2>🛡 You successfully defended your company from a cyber attack!</h2>
+      </div>
+
+      <div class="score-summary">
+        <p><strong>Threats Neutralized:</strong> 4/4</p>
+      </div>
+
+      <div class="badge">
+        <img src="https://cdn-icons-png.flaticon.com/512/2729/2729007.png" alt="Security badge" width="96" height="96">
+        <p>Cybersecurity Defender</p>
+      </div>
+
+      <button class="btn" id="download-badge">🎖 Download Badge</button>
+      <button class="btn share-btn" id="share-result">📲 Share Result with Your Team</button>
+
+      <div class="final-message">
+        <p>"Security is a habit — not a one-time task."</p>
+      </div>
+    </div>
+  </div>
+  <!-- footer -->
+   <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+  <!-- منطق التتبع المحلي (نفس آلية الـ counters) -->
+  <script>
+    const CH_KEYS = ['challenge1','challenge2','challenge3','challenge4','challenge5'];
+    const LV_KEYS = ['easy','medium','hard'];
+
+    function initCounters(){
+      CH_KEYS.forEach(k=>{
+        ['plays','completed','scoreSum','timeSumMs','scoreCount'].forEach(p=>{
+          const key=`${p}.${k}`; if(localStorage.getItem(key)===null) localStorage.setItem(key,'0');
+        });
+      });
+      LV_KEYS.forEach(k=>{ if(localStorage.getItem('level.'+k)===null) localStorage.setItem('level.'+k,'0'); });
+    }
+    function inc(key){ const v = parseInt(localStorage.getItem(key)||'0',10)+1; localStorage.setItem(key,String(v)); }
+    function add(key, val){ const v = parseFloat(localStorage.getItem(key)||'0')+Number(val||0); localStorage.setItem(key,String(v)); }
+
+    function bindTracking(){
+      document.querySelectorAll('[data-ch][data-level]').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          const ch = el.getAttribute('data-ch');
+          const lv = el.getAttribute('data-level');
+          inc('plays.'+ch);
+          if(lv) inc('level.'+lv);
+        }, {passive:true});
+      });
+    }
+
+    // ====== منطق التنقل داخل الصفحة لهذه النسخة ======
+    const $welcome = document.getElementById('welcome-screen');
+    const $c1 = document.getElementById('challenge1-screen');
+    const $c2 = document.getElementById('challenge2-screen');
+    const $c3 = document.getElementById('challenge3-screen');
+    const $c4 = document.getElementById('challenge4-screen');
+    const $done = document.getElementById('completion-screen');
+
+    function show(id){
+      [$welcome,$c1,$c2,$c3,$c4,$done].forEach(s=>s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    // Challenge 1 (phishing)
+    function setupChallenge1(){
+      const buttons = document.querySelectorAll('#challenge1-screen .link-btn');
+      const feedback = document.getElementById('challenge1-feedback');
+      const text = document.getElementById('feedback-text');
+      const next = document.getElementById('next-challenge1');
+
+      buttons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const ok = btn.getAttribute('data-correct') === 'true';
+          text.textContent = ok ? 'Correct — well done!' : 'Not safe. Look for trusted domains and HTTPS.';
+          feedback.classList.remove('hidden');
+          next.classList.remove('hidden');
+          if(ok){ inc('completed.challenge1'); }
+        });
+      });
+      next.addEventListener('click', ()=> show('challenge2-screen'));
+    }
+
+    // Challenge 2 (password)
+    function setupChallenge2(){
+      const items = document.querySelectorAll('.password-item');
+      const check = document.getElementById('check-passwords');
+      const feedback = document.getElementById('challenge2-feedback');
+      const text = document.getElementById('feedback-text2');
+      const next = document.getElementById('next-challenge2');
+
+      check.addEventListener('click', ()=>{
+        let allCorrect = true;
+        items.forEach(it=>{
+          const isWeak = it.getAttribute('data-weak')==='true';
+          const chosenStrong = it.querySelector('.strong-btn.clicked');
+          const chosenWeak = it.querySelector('.weak-btn.clicked');
+          const correct = (isWeak && !!chosenWeak) || (!isWeak && !!chosenStrong);
+          it.style.borderColor = correct ? 'rgba(0,159,223,.45)' : 'rgba(227,82,5,.55)';
+          if(!correct) allCorrect = false;
+        });
+        text.textContent = allCorrect ? 'Perfect! You classified them correctly.' : 'Some answers need review.';
+        feedback.classList.remove('hidden');
+        if(allCorrect){
+          next.classList.remove('hidden');
+          inc('completed.challenge2');
+        }
+      });
+
+      // تفعيل الأزرار داخل challenge2
+document.querySelectorAll('#challenge2-screen .weak-btn, #challenge2-screen .strong-btn')
+  .forEach(btn => {
+    btn.addEventListener('click', () => {
+      // إزالة التحديد من كل الأزرار داخل نفس الـ password-item
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('clicked'));
+      // إضافة التحديد للزر المضغوط
+      btn.classList.add('clicked');
+    });
+  });
+
+
+      next.addEventListener('click', ()=> show('challenge3-screen'));
+    }
+
+function setupChallenge3(){
+  const rows = document.querySelectorAll('.scene-item');
+  const check = document.getElementById('check-risks');
+  const feedback = document.getElementById('challenge3-feedback');
+  const text = document.getElementById('feedback-text3');
+  const next = document.getElementById('next-challenge3');
+
+  // اختيار Risk / Safe لكل عنصر
+  rows.forEach(r=>{
+    r.querySelector('.risk-btn').addEventListener('click', (e)=>{
+      r.dataset.sel='risk';
+      r.querySelectorAll('button').forEach(b => b.classList.remove('clicked'));
+      e.target.classList.add('clicked');
+    });
+
+    r.querySelector('.safe-btn').addEventListener('click', (e)=>{
+      r.dataset.sel='safe';
+      r.querySelectorAll('button').forEach(b => b.classList.remove('clicked'));
+      e.target.classList.add('clicked');
+    });
+  });
+
+  // تحقق = لون الحدود + اظهار الفيدباك + اظهار زر Next دايمًا
+  check.addEventListener('click', ()=>{
+    rows.forEach(r=>{
+      const shouldBeRisk = r.getAttribute('data-risk')==='true';
+      const choseRisk = r.dataset.sel==='risk';
+      const correct = (shouldBeRisk && choseRisk) || (!shouldBeRisk && r.dataset.sel==='safe');
+      r.style.borderColor = correct ? 'rgba(0,159,223,.45)' : 'rgba(227,82,5,.55)';
+    });
+    text.textContent = 'Answers checked. You can proceed to the next challenge.';
+    feedback.classList.remove('hidden');
+
+    // ✅ خليه يطلع حتى لو فيه إجابات غلط
+    next.classList.remove('hidden');
+  });
+
+  // دايم يودّي للتحدّي الرابع
+  next.addEventListener('click', ()=> show('challenge4-screen'));
+}
+
+
+    // Challenge 4 (behavior drag/drop)
+    function setupChallenge4(){
+      const cards = document.querySelectorAll('.behavior-card');
+      const safe = document.getElementById('safe-zone');
+      const unsafe = document.getElementById('unsafe-zone');
+      const check = document.getElementById('check-behaviors');
+      const feedback = document.getElementById('challenge4-feedback');
+      const text = document.getElementById('feedback-text4');
+      const next = document.getElementById('next-challenge4');
+
+      cards.forEach(c=>{
+        c.addEventListener('dragstart', e=>{ e.dataTransfer.setData('id', crypto.randomUUID ? (c.dataset.uuid = c.dataset.uuid || crypto.randomUUID()) : (c.dataset.uuid = c.dataset.uuid || (Date.now()+Math.random())) ); });
+      });
+
+      [safe,unsafe].forEach(zone=>{
+        zone.addEventListener('dragover', e=>e.preventDefault());
+        zone.addEventListener('drop', e=>{
+          e.preventDefault();
+          const id = e.dataTransfer.getData('id');
+          const el = [...cards].find(x=>x.dataset.uuid===id);
+          if(el) zone.appendChild(el);
+        });
+      });
+
+      check.addEventListener('click', ()=>{
+        let ok = true;
+        cards.forEach(c=>{
+          const isSafe = c.getAttribute('data-safe')==='true';
+          const inSafe = c.parentElement===safe;
+          const correct = (isSafe && inSafe) || (!isSafe && c.parentElement===unsafe);
+          c.style.borderColor = correct ? 'rgba(0,159,223,.45)' : 'rgba(227,82,5,.55)';
+          if(!correct) ok=false;
+        });
+        text.textContent = ok ? 'Excellent judgment.' : 'Some actions are misplaced — fix the red ones.';
+        feedback.classList.remove('hidden');
+        if(ok){
+          next.classList.remove('hidden');
+          inc('completed.challenge4');
+        }
+      });
+
+      next.addEventListener('click', ()=> show('completion-screen'));
+    }
+
+    // البداية
+    initCounters();
+    bindTracking();
+
+    document.getElementById('begin-btn').addEventListener('click', ()=> show('challenge1-screen'));
+
+    setupChallenge1();
+    setupChallenge2();
+    setupChallenge3();
+    setupChallenge4();
+
+    // تنزيل الشارة / مشاركة (اختياري)
+    document.getElementById('download-badge').addEventListener('click', ()=>{
+      alert('Badge download coming soon.');
+    });
+    document.getElementById('share-result').addEventListener('click', ()=>{
+      alert('Share result feature coming soon.');
+    });
+  </script>
+</body>
+</html>
