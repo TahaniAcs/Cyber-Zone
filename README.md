@@ -34,7 +34,29 @@ To ensure the game functions correctly, please maintain the following file struc
 
     1.css: Global stylesheet for consistent branding.  
 
-    /assets: Directory for images (e.g., LOG2.png, 3.png).  
+    /assets: Directory for images (e.g., LOG2.png, 3.png).
+
+    📂 File Organization & Pathing
+
+To maintain a clean repository, all helper files are organized into subfolders. Note on Image Paths: All image references in the HTML files must include the assets/ prefix to display correctly.  
+
+    HTML Files: Located in the root directory for easy navigation.  
+
+    Styles: Linked via css/main.css in the <head> of each page.  
+
+    Images: Stored in the /assets folder. Ensure your <img> tags use the following format:  
+
+        src="assets/logo.png" instead of src="logo.png".  
+
+        src="assets/threat-scene.png" instead of src="3.png".  
+
+🛠️ Quick Checklist Before Uploading:
+
+    Check Image Tags: Search for <img src=" in your files and make sure they all point to the assets/ folder.  
+
+    Case Sensitivity: Ensure the filenames in your code match the actual filenames exactly (e.g., .png vs .PNG).  
+
+    Folder Names: Verify that your folder names are exactly css and assets on GitHub.
 
 👥 Authors
 
