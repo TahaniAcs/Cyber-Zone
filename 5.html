@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cybersecurity Word Order</title>
+
+<!-- الثيم العام الموحّد -->
+<link rel="stylesheet" href="1.css">
+
+<style>
+  /* ألوان الثيم */
+  :root{
+    --blue:  rgb(0,159,223);
+    --yellow:rgb(255,205,0);
+    --navy:  rgb(4,30,66);
+    --gray:  rgb(147,149,152);
+    --dgray: rgb(77,77,77);
+    --line:#E6E9EE;
+    --surface:#fff;
+    --bg:#f7f8fa;
+    --radius:16px;
+    --shadow:0 10px 24px rgba(0,0,0,.06);
+  }
+
+  /* خلفية الصفحة */
+  body{ background:var(--bg); color:var(--navy); margin:0; }
+
+  /* هيرو مختصر + الشريط الذهبي */
+  .hero{ background:#fff; border-bottom:1px solid var(--line); }
+  .hero .inner{ padding:24px 0; text-align:center; }
+  .hero h1{ margin:0 0 6px; font-size:1.8rem; font-weight:800; color:var(--navy); }
+  .hero p{ margin:0; color:var(--gray); }
+  .hero .gold-slab{ height:10px; background:var(--yellow); border-top:1px solid rgba(0,0,0,.03); }
+
+  /* حاوية الصفحة */
+  .wrap-page{ max-width:1000px; margin:24px auto 40px; padding:0 20px; display:grid; gap:16px; }
+
+  /* كروت نظيفة */
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .big{ font-size:18px; font-weight:800; color:var(--navy); }
+  .hint{ color:var(--gray); font-size:14px; }
+
+  /* الشريط العلوي داخل الكارت */
+  .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+  .metrics{ display:flex; gap:12px; align-items:center; color:var(--dgray); }
+
+  /* أزرار وحقول */
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:#fff; color:var(--blue);
+    border:1px solid var(--line); border-radius:999px;
+    padding:10px 14px; font-weight:800; cursor:pointer;
+    transition:transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
+  .select{
+    background:#fff; color:var(--navy);
+    border:1px solid var(--line); border-radius:999px;
+    padding:9px 12px; font-weight:600;
+  }
+
+  /* لوح الحروف والفتحات – SABIC-like */
+  .slots,.bank{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .slot,.tile{
+    width:52px; height:52px; display:grid; place-items:center;
+    font-weight:800; font-size:20px; letter-spacing:1px; user-select:none;
+    border-radius:12px;
+  }
+  .slot{
+    background:#fff;
+    border:2px dashed rgba(0,159,223,.35);
+    color:#b7c0cc;
+  }
+  .tile{
+    background:#fff;
+    border:2px solid var(--line);
+    color:#000;
+    cursor:grab;
+    box-shadow:0 6px 16px rgba(0,0,0,.06);
+    transition:transform .1s;
+  }
+  .tile:active{ transform:scale(.98); }
+
+  /* حالة التقدم */
+  #status{ min-height:24px; font-size:14px; color:var(--dgray); }
+  .ok{ color:#1a7f3c; font-weight:800; }
+  .bad{ color:#c23f2a; font-weight:800; }
+
+  /* الروز/الصفوف */
+  .row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+
+  /* رف الشارات */
+  .badges{ display:flex; flex-wrap:wrap; gap:10px; }
+  .badge{
+    display:flex; align-items:center; gap:8px;
+    border:1px dashed rgba(0,159,223,.35);
+    padding:8px 10px; border-radius:10px;
+    background:#fff; font-size:14px; color:var(--dgray);
+  }
+  .badge .state{ font-weight:800; color:var(--navy); }
+
+  /* التوست */
+  .toast{
+    position:fixed; top:18px; right:18px; z-index:999;
+    background:#0c1b10; color:#c8f3d5; border:1px solid #1f6f3c;
+    padding:10px 12px; border-radius:10px; font-size:14px; display:none;
+    box-shadow:var(--shadow);
+  }
+
+  /* اتجاه ثابت لعدم عكس ترتيب التايلز */
+  .slots, .bank, .slot, .tile { direction:ltr; }
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true">
+  <!-- يسار أعلى -->
+  <span class="ring lg" style="left:-120px; top:40px;"></span>
+  <!-- يمين وسط بلون أصفر -->
+  <span class="ring y md" style="right:-140px; top:180px;"></span>
+  <!-- دائرة رمادية صغيرة في الوسط السفلي -->
+  <span class="ring g sm" style="left:30%; top:420px;"></span>
+</div>
+<!-- الهيدر الموحد -->
+<header class="topbar">
+  <div class="wrap nav">
+    <div class="brand brand-left">
+      <img src="LOG2.png" alt="Cyber Talk logo">
+      <img src="ll3.png" alt="Cyber Talk logo">
+        
+    </div>
+  <nav class="links" aria-label="Primary">
+      <a href="index.html" class="cyber-link ">Home</a>
+      <a href="2.html" class="cyber-link">Challenge 1</a>
+      <a href="3.html" class="cyber-link">Challenge 2</a>
+      <a href="4.html" class="cyber-link">Challenge 3</a>
+      <a href="5.html" class="cyber-link active">Challenge 4</a>
+      <a href="6.html" class="cyber-link">Challenge 5</a>
+    </nav>
+    <div class="brand brand-right">
+      <img src="YANPET Logo.jpg" alt="Yanpet logo">
+    </div>
+  </div>
+</header>
+
+<!-- الهيرو -->
+<section class="hero">
+  <div class="wrap inner">
+    <h1>Cybersecurity Word Order</h1>
+    <p>Arrange letters to reveal key cyber terms — earn a badge for each correct word.</p>
+  </div>
+  <div class="gold-slab"></div>
+</section>
+
+<!-- محتوى اللعبة -->
+<main class="wrap-page">
+  <div class="card topbar">
+    <div class="metrics">
+      <div>Word <span id="idx">1</span> of <span id="total">3</span></div>
+      <div>| Badges unlocked: <span id="doneCount">0</span>/<span id="total2">3</span></div>
+    </div>
+    <div class="row">
+      <label for="levelSelect" class="hint">Jump to:</label>
+      <select id="levelSelect" class="select"></select>
+      <button class="btn" id="btnHint">Hint 💡</button>
+      <button class="btn" id="btnReset">Reset ↺</button>
+      <button class="btn" id="btnNext">Next ▶️</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;">
+      <div class="big">Arrange the letters to form the correct word:</div>
+      <div class="hint" id="hintText" hidden></div>
+    </div>
+    <div class="slots" id="slots" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="big">Letter bank:</div>
+    <div class="bank" id="bank" style="margin-top:10px;"></div>
+    <div id="status" class="hint" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="big" style="margin-bottom:8px;">Badge shelf:</div>
+    <div class="badges" id="badgeShelf"></div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+ <footer class="footer">
+    
+  <div class="wrap">
+    <div class="cols">
+      <div></div>
+      <br>
+      <br>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+   <small>© 2025 Cyber Zone</small>
+    </div>
+  </footer>
+  
+<script>
+(() => {
+  // الكلمات + التلميحات
+  const LEVELS = [
+    { word: "PHISHING",    hint: "Fake emails or messages pretending to be from your supervisor or company to get your login details." },
+    { word: "ENCRYPTION",  hint: "Hiding information so only the right people can read it." },
+    { word: "TWOFACTOR",   hint: "Using two steps to confirm your identity before logging in." }
+  ];
+
+  const $slots = document.getElementById('slots');
+  const $bank = document.getElementById('bank');
+  const $status = document.getElementById('status');
+  const $hintText = document.getElementById('hintText');
+  const $btnHint = document.getElementById('btnHint');
+  const $btnReset = document.getElementById('btnReset');
+  const $btnNext = document.getElementById('btnNext');
+  const $idx = document.getElementById('idx');
+  const $total = document.getElementById('total');
+  const $total2 = document.getElementById('total2');
+  const $doneCount = document.getElementById('doneCount');
+  const $levelSelect = document.getElementById('levelSelect');
+  const $badgeShelf = document.getElementById('badgeShelf');
+  const $toast = document.getElementById('toast');
+
+  $total.textContent = LEVELS.length;
+  $total2.textContent = LEVELS.length;
+
+  const completed = new Array(LEVELS.length).fill(false);
+  const levelState = LEVELS.map(() => ({ placed: [] }));
+
+  let i = 0;
+  let target = '';
+  let placed = [];
+  let bankTiles = [];
+
+  const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);
+  const updateDoneCount = () => { $doneCount.textContent = completed.filter(Boolean).length; };
+  const showToast = (msg, ok=true) => {
+    $toast.style.borderColor = ok ? "#1f6f3c" : "#a11";
+    $toast.style.background = ok ? "#0c1b10" : "#2a0c0c";
+    $toast.style.color = ok ? "#c8f3d5" : "#f5c8c8";
+    $toast.textContent = msg;
+    $toast.style.display = 'block';
+    setTimeout(()=>{$toast.style.display='none';}, 2000);
+  };
+
+  function populateLevelSelect(){
+    $levelSelect.innerHTML = '';
+    LEVELS.forEach((_, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `Word ${idx+1}${completed[idx] ? ' ✓' : ''}`;
+      $levelSelect.appendChild(opt);
+    });
+    $levelSelect.value = i;
+  }
+
+  function renderBadgeShelf(){
+    $badgeShelf.innerHTML = '';
+    LEVELS.forEach((lvl, idx) => {
+      const div = document.createElement('div');
+      div.className = 'badge';
+      if (completed[idx]) {
+        div.innerHTML = `<span class="state">Unlocked 🏅</span> — <span>${lvl.word}</span>`;
+      } else {
+        div.innerHTML = `<span class="state">Locked 🔒</span> — <span>Word ${idx+1}</span>`;
+      }
+      $badgeShelf.appendChild(div);
+    });
+  }
+
+  function makeTile(char, id){
+    const el = document.createElement('div');
+    el.className = 'tile';
+    el.textContent = char;
+    el.draggable = true;
+    el.dataset.id = id;
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', id);
+    });
+    return el;
+  }
+
+  function makeSlot(index){
+    const el = document.createElement('div');
+    el.className = 'slot';
+    el.dataset.index = index;
+    el.addEventListener('dragover', e => e.preventDefault());
+    el.addEventListener('drop', onDrop);
+    // دعم النقر: يضع أول حرف فاضي في البنك داخل الفتحة
+    el.addEventListener('click', () => {
+      const free = bankTiles.find(t => t.parentElement === $bank);
+      if (free) placeTileIntoSlot(free, el);
+    });
+    return el;
+  }
+
+  function onDrop(e){
+    e.preventDefault();
+    const id = e.dataTransfer.getData('text/plain');
+    const tile = bankTiles.find(t => t.dataset.id === id);
+    if (tile) placeTileIntoSlot(tile, e.currentTarget);
+  }
+
+  function placeTileIntoSlot(tile, slot){
+    if (slot.firstChild){
+      $bank.appendChild(slot.firstChild);
+    }
+    slot.innerHTML = '';
+    slot.appendChild(tile);
+    placed = Array.from($slots.children).map(s => s.firstChild ? s.firstChild.textContent : null);
+    levelState[i].placed = placed.slice();
+    checkProgress();
+  }
+
+  function rebuildBankFromPlaced(){
+    const usedCounts = {};
+    placed.forEach(ch => { if (ch) usedCounts[ch]=(usedCounts[ch]||0)+1; });
+    const letters = target.split('');
+    const remaining = [];
+    letters.forEach(ch => {if (usedCounts[ch]) usedCounts[ch]--; else remaining.push(ch);});
+    const shuffled = shuffle(remaining);
+    $bank.innerHTML = '';
+    bankTiles = shuffled.map((c,idx) => makeTile(c, 't'+i+'_'+idx));
+    bankTiles.forEach(t => $bank.appendChild(t));
+  }
+
+  function checkProgress(){
+    const filled = placed.filter(Boolean).length;
+    $status.textContent = `Placed ${filled} / ${target.length} letters.`;
+    if (filled === target.length){
+      const formed = placed.join('');
+      if (formed === target){
+        if (!completed[i]) {
+          completed[i] = true;
+          updateDoneCount();
+          populateLevelSelect();
+          renderBadgeShelf();
+          showToast('Badge earned! 🏅', true);
+        }
+        $status.innerHTML = '<span class="ok">Correct! You may move on or pick any other word.</span>';
+      } else {
+        $status.innerHTML = '<span class="bad">Not quite. Swap letters or press “Reset”.</span>';
+      }
+    }
+  }
+
+  function buildLevel(){
+    $hintText.hidden = true;
+    $idx.textContent = (i+1);
+    populateLevelSelect();
+    renderBadgeShelf();
+
+    target = LEVELS[i].word.toUpperCase();
+    placed = (levelState[i].placed && levelState[i].placed.length === target.length)
+      ? levelState[i].placed.slice()
+      : new Array(target.length).fill(null);
+
+    $slots.innerHTML = '';
+    for (let k=0;k<target.length;k++){
+      const slot = makeSlot(k);
+      if (placed[k]) {
+        const tile = makeTile(placed[k], 'restore_'+i+'_'+k);
+        slot.appendChild(tile);
+      }
+      $slots.appendChild(slot);
+    }
+
+    rebuildBankFromPlaced();
+    $status.textContent = 'Drag letters into the slots (or tap a slot to place the next letter).';
+  }
+
+  function resetCurrent(){
+    levelState[i].placed = new Array(target.length).fill(null);
+    placed = levelState[i].placed.slice();
+    $slots.innerHTML = '';
+    for (let k=0;k<target.length;k++){
+      $slots.appendChild(makeSlot(k));
+    }
+    rebuildBankFromPlaced();
+    $status.textContent = 'Word has been reset. Try again.';
+  }
+
+  function nextLevel(){
+    if (!completed[i]) {
+      showToast('You can continue, but finish this word to earn its badge.', false);
+    }
+    i = (i + 1) % LEVELS.length;
+    buildLevel();
+  }
+
+  // ربط الأزرار
+  $btnHint.onclick = () => {
+    $hintText.textContent = 'Hint: ' + LEVELS[i].hint;
+    $hintText.hidden = !$hintText.hidden;
+  };
+  $btnReset.onclick = resetCurrent;
+  $btnNext.onclick = nextLevel;
+  $levelSelect.onchange = (e) => { i = parseInt(e.target.value,10) || 0; buildLevel(); };
+
+  // ابدأ
+  updateDoneCount();
+  populateLevelSelect();
+  renderBadgeShelf();
+  buildLevel();
+})();
+</script>
+</body>
+</html>
